@@ -2,11 +2,9 @@ package com.example.curlapp
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.example.curlapp.databinding.ActivityMainBinding
 import com.google.gson.Gson
 import okhttp3.Call
@@ -14,12 +12,6 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-import retrofit2.http.GET
-import retrofit2.http.Path
 import java.io.IOException
 import java.net.URL
 
@@ -71,31 +63,35 @@ class MainActivity : AppCompatActivity() {
         binding.get2Btn.setOnClickListener {
             val retrofit = RetrofitClient.getInstance()
             val apiInterface = retrofit.create(apiService::class.java)
-            lifecycleScope.launchWhenCreated {
-                try {
-                    val response = apiInterface.getData()
-                    if(response.isSuccessful) {
-                        val inputStream = URL(response.body()?.image)
-                            .openStream()
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
-                        runOnUiThread {
-//                            binding.imageIv.setImageBitmap(bitmap)
-                            binding.responseTv.text = response.raw().toString()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            response.errorBody().toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
+            val call: retrofit2.Call<NasaAPI> = apiInterface.getData()
+            call.enqueue(object: retrofit2.Callback<NasaAPI> {
+                override fun onResponse(
+                    call: retrofit2.Call<NasaAPI>,
+                    response: retrofit2.Response<NasaAPI>
+                ) {
+                    val modal: NasaAPI? = response.body()
+                    val inputStream = URL(modal?.image).openStream()
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    runOnUiThread {
+                        binding.imageIv.setImageBitmap(bitmap)
+                        binding.responseTv.text = modal?.text
                     }
-                } catch (Ex:Exception) {
-                    Ex.localizedMessage?.let { it1 -> Log.e("Error", it1) }
                 }
-            }
+
+                override fun onFailure(call: retrofit2.Call<NasaAPI>, t: Throwable) {
+                    Toast.makeText(
+                        applicationContext,
+                        "GET resulted in onFailure",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
 
         }
-
+//
     }
+
 }
+
 
