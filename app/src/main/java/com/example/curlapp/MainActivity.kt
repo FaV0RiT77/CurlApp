@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.martianR_itm -> {
-                    loadFragment(MartianStarterFragment())
+                    loadFragment(MartianRecyclerFragment())
                     true
                 }
 

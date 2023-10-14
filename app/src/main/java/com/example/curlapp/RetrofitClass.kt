@@ -3,14 +3,26 @@ package com.example.curlapp
 import retrofit2.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 import java.util.concurrent.Executors
 
 interface apiService {
-    @GET("apod?api_key=4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9")
-    fun getData(): Call<NasaAPI>
+    @GET("apod")
+    fun getData(@Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9"): Call<NasaAPI>
+    @GET("apod")
+    fun getArray(@Query("count") count: Int = 20,
+                 @Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9")
+    : Call<ApodArray>
+    @GET("mars-photos/api/v1/rovers/curiosity/photos")
+    fun getArrayMartian(@Query("sol") sol: Int = 1000,
+                        @Query("page") page: Int = 1,
+                        @Query("camera") camera: String = "mast",
+                        @Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9"):
+            Call<MartianArray>
 }
 
 object RetrofitClient {
