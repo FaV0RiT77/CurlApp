@@ -22,8 +22,12 @@ interface apiService {
                         @Query("page") page: Int = 1,
                         @Query("camera") camera: String = "mast",
                         @Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9"):
-            Call<MartianArray>
+            Call<MartianResponse>
 }
+class MartianResponse {
+    val photos: MartianArray = MartianArray()
+}
+
 
 object RetrofitClient {
 

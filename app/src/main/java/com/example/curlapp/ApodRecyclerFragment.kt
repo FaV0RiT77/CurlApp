@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.curlapp.databinding.FragmentApodRecyclerBinding
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +34,8 @@ class ApodRecyclerFragment : Fragment() {
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_apod_recycler, container, false)
 
+
+
         val retrofit = RetrofitClient.getInstance().create(apiService::class.java)
         retrofit.getArray().enqueue(object : Callback<ApodArray> {
             override fun onResponse(call: Call<ApodArray>, response: Response<ApodArray>) {
@@ -47,6 +52,11 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items", item.date)
+                        activity?.runOnUiThread {
+//                            adapter.notifyDataSetChanged()
+                            adapter.submitList(list)
+                                                    }
+
                     }
                 }
 
@@ -58,12 +68,12 @@ class ApodRecyclerFragment : Fragment() {
 
         })
 
-        retrofit.getArrayMartian().enqueue(object : Callback<MartianArray> {
+        retrofit.getArrayMartian().enqueue(object : Callback<MartianResponse> {
             override fun onResponse(
-                call: Call<MartianArray>,
-                response: Response<MartianArray>
+                call: Call<MartianResponse>,
+                response: Response<MartianResponse>
             ) {
-                val responseItem = response.body()?.listIterator()
+                val responseItem = response.body()?.photos?.listIterator()
                 if (responseItem != null) {
                     while (responseItem.hasNext()) {
                         val item: NasaAPI = responseItem.next()
@@ -76,12 +86,17 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items2", item.date)
+                        activity?.runOnUiThread {
+//                            adapter.notifyDataSetChanged()
+                            adapter.submitList(list2)
+                        }
+
                     }
 
                 }
             }
 
-            override fun onFailure(call: Call<MartianArray>, t: Throwable) {
+            override fun onFailure(call: Call<MartianResponse>, t: Throwable) {
                 val message = if (t.message != null) t.message else "An error occurred!"
                 if (message != null) Log.e("items2", message)
                 Log.e("items2", "Mars fucked up")

@@ -1,6 +1,7 @@
 package com.example.curlapp
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.curlapp.databinding.FragmentApodApiStarterBinding
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
@@ -35,6 +37,7 @@ class ApodApiStarterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Fresco.initialize(context)
         // Inflate the layout for this fragment
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_apod_api_starter, container, false )
@@ -51,10 +54,9 @@ class ApodApiStarterFragment : Fragment() {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string()
                         val getToData = Gson().fromJson(responseBody, NasaAPI::class.java)
-                        val inputStream = URL(getToData.image).openStream()
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        val imgUri = Uri.parse(getToData.image)
                         activity?.runOnUiThread {
-                            binding.imageIv.setImageBitmap(bitmap)
+                            binding.imageIv.setImageURI(imgUri)
                             binding.responseTv.text = getToData.text
                         }
 
@@ -87,10 +89,9 @@ class ApodApiStarterFragment : Fragment() {
                     response: retrofit2.Response<NasaAPI>
                 ) {
                     val modal: NasaAPI? = response.body()
-                    val inputStream = URL(modal?.image).openStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
+//                    val imgUri = Uri.parse(modal?.image)
                     activity?.runOnUiThread {
-                        binding.imageIv.setImageBitmap(bitmap)
+//                        binding.imageIv.setImageURI(imgUri)
                         binding.responseTv.text = modal?.text
                     }
                 }

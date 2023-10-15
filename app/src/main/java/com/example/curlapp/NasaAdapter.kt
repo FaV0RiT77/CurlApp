@@ -2,18 +2,23 @@ package com.example.curlapp
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.curlapp.NasaAdapter.Const.APOD
 import com.example.curlapp.NasaAdapter.Const.MARTIAN
 import com.example.curlapp.databinding.ApodItemBinding
 import com.example.curlapp.databinding.MartianItemBinding
+import com.squareup.picasso.Picasso
 
 class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     inner class ApodViewHolder(private val apodItem: ApodItemBinding):
         RecyclerView.ViewHolder(apodItem.root) {
             fun bind(item: NasaAPI) {
-//                apodItem.imageIv.setImageResource(TODO())
+                Glide.with(apodItem.imageIv.context)
+                    .load(item.image)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(apodItem.imageIv)
                 apodItem.dateTv.text = item.date
             }
         }
@@ -21,7 +26,10 @@ class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<R
     inner class MartianViewHolder(private val martianItem: MartianItemBinding):
         RecyclerView.ViewHolder(martianItem.root) {
         fun bind(item: NasaAPI) {
-//            martianItem.imageIv.setImageResource(TODO())
+            Picasso.get()
+                .load(item.image)
+                .error(R.drawable.ic_launcher_background)
+                .into(martianItem.imageIv)
             martianItem.dateTv.text = item.date
             martianItem.textTv.text = item.text
         }
@@ -54,6 +62,37 @@ class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<R
             (holder as ApodViewHolder).bind(items[position])
         } else {
             (holder as MartianViewHolder).bind(items[position])
+        }
+    }
+
+    fun submitList(newList: ArrayList<NasaAPI>) {
+        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(items, newList))
+        items.clear()
+        items.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class MyDiffCallback (
+        private val oldList: ArrayList<NasaAPI>,
+        private val newList: ArrayList<NasaAPI>
+    ): DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].image == newList[newItemPosition].image
+        }
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return when {
+                oldList[oldItemPosition].date == newList[newItemPosition].date -> true
+                oldList[oldItemPosition].text == newList[newItemPosition].text -> true
+                oldList[oldItemPosition].title == newList[newItemPosition].title -> true
+                oldList[oldItemPosition].image == newList[newItemPosition].image -> true
+                else -> false
+            }
+        }
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+        override fun getNewListSize(): Int {
+            return newList.size
         }
     }
 
