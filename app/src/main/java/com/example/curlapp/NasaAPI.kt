@@ -9,8 +9,8 @@ data class NasaAPI(
     val text: String?,
     val title: String?,
     @SerializedName("url", alternate = ["img_src"])
-    val image: String) {
-}
+    val image: String?
+)
 
 class ApodArray: ArrayList<NasaAPI>()
 class MartianArray: ArrayList<NasaAPI>()

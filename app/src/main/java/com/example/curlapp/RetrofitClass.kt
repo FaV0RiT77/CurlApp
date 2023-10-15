@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
 interface apiService {
     @GET("apod")
     fun getData(@Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9"): Call<NasaAPI>
-    @GET("apod")
+    @GET("planetary/apod")
     fun getArray(@Query("count") count: Int = 20,
                  @Query("api_key") key: String = "4nf26H20czhc8GqRbiB8fadE8PI3UH8darWvNel9")
     : Call<ApodArray>
@@ -37,7 +37,7 @@ object RetrofitClient {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://api.nasa.gov/planetary/")
+            .baseUrl("https://api.nasa.gov/")
             .callbackExecutor(Executors.newSingleThreadExecutor())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
