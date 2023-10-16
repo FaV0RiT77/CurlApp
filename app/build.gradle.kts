@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation("com.facebook.fresco:fresco:2.3.0")
+//    implementation("com.facebook.fresco:fresco:2.3.0")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")

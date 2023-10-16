@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.curlapp.databinding.FragmentApodApiStarterBinding
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
@@ -37,7 +36,6 @@ class ApodApiStarterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Fresco.initialize(context)
         // Inflate the layout for this fragment
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_apod_api_starter, container, false )
@@ -54,9 +52,9 @@ class ApodApiStarterFragment : Fragment() {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string()
                         val getToData = Gson().fromJson(responseBody, NasaAPI::class.java)
-                        val imgUri = Uri.parse(getToData.image)
+//                        val imgUri = Uri.parse(getToData.image)
                         activity?.runOnUiThread {
-                            binding.imageIv.setImageURI(imgUri)
+//                            binding.imageIv.setImageURI(imgUri)
                             binding.responseTv.text = getToData.text
                         }
 

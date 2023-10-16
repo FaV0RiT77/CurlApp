@@ -10,6 +10,7 @@ import com.example.curlapp.NasaAdapter.Const.MARTIAN
 import com.example.curlapp.databinding.ApodItemBinding
 import com.example.curlapp.databinding.MartianItemBinding
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.withContext
 
 class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class ApodViewHolder(private val apodItem: ApodItemBinding):
@@ -66,10 +67,10 @@ class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<R
     }
 
     fun submitList(newList: ArrayList<NasaAPI>) {
-        val diffResult = DiffUtil.calculateDiff(MyDiffCallback(items, newList))
-        items.clear()
-        items.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
+            val diffResult = DiffUtil.calculateDiff(MyDiffCallback(ArrayList(items), newList))
+            items.addAll(newList)
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     class MyDiffCallback (
@@ -96,4 +97,3 @@ class NasaAdapter(private var items: ArrayList<NasaAPI>): RecyclerView.Adapter<R
         }
     }
 
-}

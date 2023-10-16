@@ -35,7 +35,6 @@ class ApodRecyclerFragment : Fragment() {
             .inflate(inflater, R.layout.fragment_apod_recycler, container, false)
 
 
-
         val retrofit = RetrofitClient.getInstance().create(apiService::class.java)
         retrofit.getArray().enqueue(object : Callback<ApodArray> {
             override fun onResponse(call: Call<ApodArray>, response: Response<ApodArray>) {
@@ -52,11 +51,12 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items", item.date)
-                        activity?.runOnUiThread {
-//                            adapter.notifyDataSetChanged()
-                            adapter.submitList(list)
-                                                    }
 
+
+                    }
+                    activity?.runOnUiThread {
+//                            adapter.notifyDataSetChanged()
+                        adapter.submitList(list)
                     }
                 }
 
@@ -86,11 +86,12 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items2", item.date)
-                        activity?.runOnUiThread {
-//                            adapter.notifyDataSetChanged()
-                            adapter.submitList(list2)
-                        }
 
+
+                    }
+                    activity?.runOnUiThread {
+//                            adapter.notifyDataSetChanged()
+                        adapter.submitList(list2)
                     }
 
                 }
