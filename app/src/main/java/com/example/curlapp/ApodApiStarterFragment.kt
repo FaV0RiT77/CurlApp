@@ -1,6 +1,7 @@
 package com.example.curlapp
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -51,10 +52,9 @@ class ApodApiStarterFragment : Fragment() {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string()
                         val getToData = Gson().fromJson(responseBody, NasaAPI::class.java)
-                        val inputStream = URL(getToData.image).openStream()
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
+//                        val imgUri = Uri.parse(getToData.image)
                         activity?.runOnUiThread {
-                            binding.imageIv.setImageBitmap(bitmap)
+//                            binding.imageIv.setImageURI(imgUri)
                             binding.responseTv.text = getToData.text
                         }
 
@@ -87,10 +87,9 @@ class ApodApiStarterFragment : Fragment() {
                     response: retrofit2.Response<NasaAPI>
                 ) {
                     val modal: NasaAPI? = response.body()
-                    val inputStream = URL(modal?.image).openStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
+//                    val imgUri = Uri.parse(modal?.image)
                     activity?.runOnUiThread {
-                        binding.imageIv.setImageBitmap(bitmap)
+//                        binding.imageIv.setImageURI(imgUri)
                         binding.responseTv.text = modal?.text
                     }
                 }
