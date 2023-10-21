@@ -32,14 +32,6 @@ class MartianResponse {
 object RetrofitClient {
 
     fun getInstance(): Retrofit {
-        val mHttpLoggingInterceptor =
-            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val mOkHttpClient = OkHttpClient
-            .Builder()
-            .addInterceptor(mHttpLoggingInterceptor)
-            .build()
-
         return Retrofit.Builder()
             .baseUrl("https://api.nasa.gov/")
             .callbackExecutor(Executors.newSingleThreadExecutor())

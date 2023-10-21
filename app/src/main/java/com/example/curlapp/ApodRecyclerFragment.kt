@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.curlapp.databinding.FragmentApodRecyclerBinding
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ApodRecyclerFragment : Fragment() {
     private lateinit var binding: FragmentApodRecyclerBinding
 
@@ -33,7 +35,6 @@ class ApodRecyclerFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil
             .inflate(inflater, R.layout.fragment_apod_recycler, container, false)
-
 
         val retrofit = RetrofitClient.getInstance().create(apiService::class.java)
         retrofit.getArray().enqueue(object : Callback<ApodArray> {
@@ -51,21 +52,17 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items", item.date)
-
-
                     }
                     activity?.runOnUiThread {
 //                            adapter.notifyDataSetChanged()
                         adapter.submitList(list)
                     }
                 }
-
             }
 
             override fun onFailure(call: Call<ApodArray>, t: Throwable) {
                 Log.e("items", "Apod fucked up")
             }
-
         })
 
         retrofit.getArrayMartian().enqueue(object : Callback<MartianResponse> {
@@ -86,14 +83,11 @@ class ApodRecyclerFragment : Fragment() {
                             )
                         )
                         Log.i("items2", item.date)
-
-
                     }
                     activity?.runOnUiThread {
 //                            adapter.notifyDataSetChanged()
                         adapter.submitList(list2)
                     }
-
                 }
             }
 
